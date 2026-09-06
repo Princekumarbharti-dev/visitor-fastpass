@@ -1,0 +1,57 @@
+server:
+  port: ${PASS_SERVICE_PORT:8083}
+  shutdown: graceful
+
+spring:
+  application:
+    name: pass-service
+  config:
+    import: optional:configserver:${CONFIG_SERVER_URL:http://${CONFIG_SERVER_USERNAME:config}:${CONFIG_SERVER_PASSWORD:change-config-password}@localhost:8888}
+  datasource:
+    url: ${PASS_DB_URL:jdbc:mysql://localhost:3306/visitor_pass?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+    username: ${PASS_DB_USERNAME:root}
+    password: ${PASS_DB_PASSWORD:root}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.jdbc.time_zone: UTC
+  flyway:
+    enabled: true
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://${EUREKA_USERNAME:eureka}:${EUREKA_PASSWORD:change-eureka-password}@localhost:8761/eureka/}
+    enabled: ${EUREKA_ENABLED:true}
+
+app:
+  jwt:
+    issuer: ${APP_JWT_ISSUER:visitor-fastpass}
+    secret: ${APP_JWT_SECRET:change-this-development-secret-32-bytes-minimum}
+  internal-api-key: ${INTERNAL_API_KEY:change-this-development-internal-api-key}
+  pass:
+    encryption-secret: ${PASS_ENCRYPTION_SECRET:change-this-pass-encryption-secret-32-characters}
+    public-base-url: ${PASS_PUBLIC_BASE_URL:http://localhost:5173}
+    valid-before-minutes: ${PASS_VALID_BEFORE_MINUTES:120}
+    valid-after-minutes: ${PASS_VALID_AFTER_MINUTES:480}
+  kafka:
+    topics:
+      pass-generated: ${PASS_GENERATED_TOPIC:visitor.pass-generated.v1}
+
+management:
+  endpoints.web.exposure.include: health,info
+  endpoint.health.show-details: when_authorized
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method

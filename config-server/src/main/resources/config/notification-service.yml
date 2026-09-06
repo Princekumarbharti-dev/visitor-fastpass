@@ -1,0 +1,8 @@
+app:
+  jwt:
+    issuer: ${APP_JWT_ISSUER:visitor-fastpass}
+    secret: ${APP_JWT_SECRET:change-this-development-secret-32-bytes-minimum}
+  kafka.topics.pass-generated: ${PASS_GENERATED_TOPIC:visitor.pass-generated.v1}
+  mail:
+    enabled: ${MAIL_ENABLED:false}
+    from-address: ${MAIL_FROM_ADDRESS:no-reply@visitorfastpass.local}

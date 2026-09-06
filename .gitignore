@@ -1,0 +1,15 @@
+target/
+**/target/
+.idea/
+*.iml
+.vscode/
+.env
+*.log
+data/
+uploads/
+.run/
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+VISITOR_FASTPASS_FINAL_PLAN.md
+VISITOR_FASTPASS_MVP.md

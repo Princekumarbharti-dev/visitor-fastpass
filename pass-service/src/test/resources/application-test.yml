@@ -1,0 +1,21 @@
+spring:
+  config.import: ""
+  datasource:
+    url: jdbc:h2:mem:passes;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa.hibernate.ddl-auto: create-drop
+  flyway.enabled: false
+eureka.client.enabled: false
+app:
+  jwt:
+    issuer: visitor-fastpass-test
+    secret: test-secret-that-is-at-least-thirty-two-bytes-long
+  internal-api-key: test-internal-api-key-at-least-24
+  kafka.topics.pass-generated: visitor.pass-generated.test
+  pass:
+    encryption-secret: test-pass-encryption-secret-at-least-32-characters
+    public-base-url: http://localhost:5173
+    valid-before-minutes: 120
+    valid-after-minutes: 480

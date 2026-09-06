@@ -1,0 +1,7 @@
+app:
+  jwt:
+    issuer: ${APP_JWT_ISSUER:visitor-fastpass}
+    secret: ${APP_JWT_SECRET:change-this-development-secret-32-bytes-minimum}
+
+app-security:
+  allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173,http://localhost:3000}

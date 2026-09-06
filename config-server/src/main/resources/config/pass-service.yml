@@ -1,0 +1,10 @@
+app:
+  jwt:
+    issuer: ${APP_JWT_ISSUER:visitor-fastpass}
+    secret: ${APP_JWT_SECRET:change-this-development-secret-32-bytes-minimum}
+  internal-api-key: ${INTERNAL_API_KEY:change-this-development-internal-api-key}
+  pass:
+    encryption-secret: ${PASS_ENCRYPTION_SECRET:change-this-pass-encryption-secret-32-characters}
+    public-base-url: ${PASS_PUBLIC_BASE_URL:http://localhost:5173}
+    valid-before-minutes: ${PASS_VALID_BEFORE_MINUTES:120}
+    valid-after-minutes: ${PASS_VALID_AFTER_MINUTES:480}

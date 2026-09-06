@@ -1,0 +1,91 @@
+server:
+  port: ${NOTIFICATION_SERVICE_PORT:8084}
+  shutdown: graceful
+
+spring:
+  application:
+    name: notification-service
+
+  config:
+    import: optional:configserver:${CONFIG_SERVER_URL:http://${CONFIG_SERVER_USERNAME:config}:${CONFIG_SERVER_PASSWORD:change-config-password}@localhost:8888}
+
+  datasource:
+    url: ${NOTIFICATION_DB_URL:jdbc:mysql://localhost:3306/visitor_notification?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+    username: ${NOTIFICATION_DB_USERNAME:root}
+    password: ${NOTIFICATION_DB_PASSWORD:root}
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+
+  flyway:
+    enabled: true
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: visitor-notification-service-v1
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.visitorfastpass.notification.event
+        spring.json.value.default.type: com.visitorfastpass.notification.event.PassGeneratedEvent
+
+  mail:
+    host: ${MAIL_HOST:localhost}
+    port: ${MAIL_PORT:1025}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: ${MAIL_SMTP_AUTH:false}
+          starttls:
+            enable: ${MAIL_STARTTLS:false}
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://${EUREKA_USERNAME:eureka}:${EUREKA_PASSWORD:change-eureka-password}@localhost:8761/eureka/}
+    enabled: ${EUREKA_ENABLED:true}
+
+app:
+  jwt:
+    issuer: ${APP_JWT_ISSUER:visitor-fastpass}
+    secret: ${APP_JWT_SECRET:change-this-development-secret-32-bytes-minimum}
+
+  kafka:
+    topics:
+      pass-generated: ${PASS_GENERATED_TOPIC:visitor.pass-generated.v1}
+
+  mail:
+    enabled: ${MAIL_ENABLED:true}
+    from-address: ${MAIL_FROM_ADDRESS:no-reply@visitorfastpass.local}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+  endpoint:
+    health:
+      show-details: when_authorized
+
+  health:
+    mail:
+      enabled: ${MAIL_ENABLED:true}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

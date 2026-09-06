@@ -1,0 +1,77 @@
+server:
+  port: ${IDENTITY_SERVICE_PORT:8081}
+  shutdown: graceful
+
+spring:
+  application:
+    name: identity-service
+  config:
+    import: optional:configserver:${CONFIG_SERVER_URL:http://${CONFIG_SERVER_USERNAME:config}:${CONFIG_SERVER_PASSWORD:change-config-password}@localhost:8888}
+  datasource:
+    url: ${IDENTITY_DB_URL:jdbc:mysql://localhost:3306/visitor_identity?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+    username: ${IDENTITY_DB_USERNAME:root}
+    password: ${IDENTITY_DB_PASSWORD:root}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://${EUREKA_USERNAME:eureka}:${EUREKA_PASSWORD:change-eureka-password}@localhost:8761/eureka/}
+    enabled: ${EUREKA_ENABLED:true}
+
+app:
+  jwt:
+    issuer: ${APP_JWT_ISSUER:visitor-fastpass}
+    secret: ${APP_JWT_SECRET:change-this-development-secret-32-bytes-minimum}
+    access-token-minutes: ${APP_JWT_ACCESS_MINUTES:30}
+  bootstrap:
+    enabled: ${APP_BOOTSTRAP_ENABLED:true}
+    admin:
+      username: ${BOOTSTRAP_ADMIN_USERNAME:admin}
+      password: ${BOOTSTRAP_ADMIN_PASSWORD:Admin@123}
+      email: ${BOOTSTRAP_ADMIN_EMAIL:admin@fastpass.local}
+      employee-code: ADMIN-001
+      full-name: System Administrator
+      department: Administration
+      designation: Administrator
+    host:
+      username: ${BOOTSTRAP_HOST_USERNAME:asha.host}
+      password: ${BOOTSTRAP_HOST_PASSWORD:Host@123}
+      email: ${BOOTSTRAP_HOST_EMAIL:asha@fastpass.local}
+      employee-code: HOST-001
+      full-name: Asha Sharma
+      department: Engineering
+      designation: Engineering Manager
+    reception:
+      username: ${BOOTSTRAP_RECEPTION_USERNAME:reception}
+      password: ${BOOTSTRAP_RECEPTION_PASSWORD:Reception@123}
+      email: ${BOOTSTRAP_RECEPTION_EMAIL:reception@fastpass.local}
+      employee-code: RECEPTION-001
+      full-name: Front Desk
+      department: Administration
+      designation: Reception Executive
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when_authorized
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method

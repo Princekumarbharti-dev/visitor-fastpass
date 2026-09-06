@@ -1,0 +1,71 @@
+server:
+  port: ${VISITOR_SERVICE_PORT:8082}
+  shutdown: graceful
+
+spring:
+  application:
+    name: visitor-service
+  config:
+    import: optional:configserver:${CONFIG_SERVER_URL:http://${CONFIG_SERVER_USERNAME:config}:${CONFIG_SERVER_PASSWORD:change-config-password}@localhost:8888}
+  datasource:
+    url: ${VISITOR_DB_URL:jdbc:mysql://localhost:3306/visitor_workflow?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+    username: ${VISITOR_DB_USERNAME:root}
+    password: ${VISITOR_DB_PASSWORD:root}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+  flyway:
+    enabled: true
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connect-timeout: 2000
+            read-timeout: 3000
+            logger-level: basic
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://${EUREKA_USERNAME:eureka}:${EUREKA_PASSWORD:change-eureka-password}@localhost:8761/eureka/}
+    enabled: ${EUREKA_ENABLED:true}
+
+app:
+  jwt:
+    issuer: ${APP_JWT_ISSUER:visitor-fastpass}
+    secret: ${APP_JWT_SECRET:change-this-development-secret-32-bytes-minimum}
+  internal-api-key: ${INTERNAL_API_KEY:change-this-development-internal-api-key}
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      identityService:
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+      passService:
+        sliding-window-size: 10
+        minimum-number-of-calls: 3
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when_authorized
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method

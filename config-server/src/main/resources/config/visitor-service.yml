@@ -1,0 +1,9 @@
+spring:
+  jpa:
+    open-in-view: false
+
+app:
+  jwt:
+    issuer: ${APP_JWT_ISSUER:visitor-fastpass}
+    secret: ${APP_JWT_SECRET:change-this-development-secret-32-bytes-minimum}
+  internal-api-key: ${INTERNAL_API_KEY:change-this-development-internal-api-key}

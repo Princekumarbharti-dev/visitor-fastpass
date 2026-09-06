@@ -1,0 +1,25 @@
+spring:
+  config:
+    import: ""
+  datasource:
+    url: jdbc:h2:mem:identity;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  flyway:
+    enabled: false
+
+eureka:
+  client:
+    enabled: false
+
+app:
+  bootstrap:
+    enabled: false
+  jwt:
+    issuer: visitor-fastpass-test
+    secret: test-secret-that-is-at-least-thirty-two-bytes-long
+    access-token-minutes: 30
