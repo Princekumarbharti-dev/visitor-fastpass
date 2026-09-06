@@ -4,6 +4,10 @@ Visitor FastPass is a visitor management system for host-approved visits, secure
 
 It combines a React frontend with Spring Boot microservices. Visitors register without an account, hosts approve or reject requests, reception verifies the QR pass, and administrators monitor the complete workflow.
 
+**Frontend demo:** [Open the deployed frontend](https://princekumarbharti-dev.github.io/visitor-fastpass/)
+
+This public demo deploys the React frontend only. The homepage and visual experience are available without infrastructure; registration, login, status lookup, approvals, pass verification, and dashboards require the backend services to be running and connected through `VITE_API_BASE_URL`.
+
 ## Architecture
 
 ```mermaid
@@ -110,9 +114,11 @@ These bootstrap credentials are for local development only. Disable bootstrap an
 
 ## Deployment
 
-The frontend is a static Vite application and includes [Vercel configuration](frontend/vercel.json) for SPA routing. Create a Vercel project using `frontend` as the project root, set the build command to `pnpm build`, the output directory to `dist`, and define `VITE_API_BASE_URL` as the public URL of a deployed API Gateway.
+The frontend is deployed as a static Vite application at [the GitHub Pages demo](https://princekumarbharti-dev.github.io/visitor-fastpass/). The deployment is built automatically by [the GitHub Actions workflow](.github/workflows/deploy-frontend.yml) whenever `frontend/` changes on `main`.
 
-The frontend cannot complete a public demo while `VITE_API_BASE_URL` points to `localhost`. The backend services, MySQL, Kafka, and gateway must be deployed separately, with CORS enabled for the frontend domain. The included [GitHub Actions workflow](.github/workflows/deploy-frontend.yml) can publish the frontend to GitHub Pages after the repository is pushed and its `VITE_API_BASE_URL` variable is configured.
+For another static host, the repository also includes [Vercel configuration](frontend/vercel.json). Use `frontend` as the project root, set the build command to `pnpm build`, and set the output directory to `dist`.
+
+To enable the full workflow in a deployed frontend, configure the GitHub Actions repository variable `VITE_API_BASE_URL` with the public API Gateway URL. The backend services, MySQL, Kafka, and gateway must be deployed separately, with CORS enabled for the frontend domain.
 
 ## API highlights
 
